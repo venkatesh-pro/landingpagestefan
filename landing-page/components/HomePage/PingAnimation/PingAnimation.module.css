@@ -1,0 +1,37 @@
+.container {
+  color: #3c3c3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heartbeat {
+  position: absolute;
+  width: fit-content;
+  background-color: #22c55e;
+  border-radius: 40px;
+  width: 10px;
+  height: 10px;
+  opacity: 0.75;
+  margin-left: 10px;
+
+  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.dot {
+  position: relative;
+  width: fit-content;
+  background: linear-gradient(135deg, #22c55e, #22c55e 48%, #342662);
+  border-radius: 40px;
+  width: 10px;
+  height: 10px;
+  margin-left: 10px;
+}
+
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}

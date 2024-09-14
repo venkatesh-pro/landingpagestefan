@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String  @id @default(cuid())
+  email String 
+  locationData Json
+}
+
+// For beta users 1-5 (random) users per day, for volume processed something between 113-987 (random) every 1-47 mins, for users waiting 5-57 (random) every minute
+model NumberIncrement{
+  id String @id @default(cuid())
+  userPerDay Int @default(1526)
+  volumeProcessedPerHour Int @default(1326522)
+  UserWaitingPerMin Int @default(155294)
+}
