@@ -7,3 +7,25 @@
 
 
 3. Email verify API
+
+
+
+for backend
+
+1. Number increment
+2. Microsoft Clarity
+3. Producthunt API
+4. Store user emails
+5. Email verify API
+
+
+For new job:
+
+new page create
+
+blog and all updates need to create with backend
+
+
+checked mailtidy
+microsoft clarity
+product hunt

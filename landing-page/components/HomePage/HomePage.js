@@ -13,11 +13,16 @@ import CustomBtn from "../CustomBtn/CustomBtn";
 import Spline from "@splinetool/react-spline";
 import AutoIncrementBtn from "../CustomBtn/AutoIncrementBtn";
 import { io } from "socket.io-client";
+import toast from "react-hot-toast";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const HomePage = () => {
   const { isDark } = useIsDarkStore();
 
+  const [email, setEmail] = useState();
+  const [isLoadingForSendMail, setIsLoadingForSendMail] = useState(false);
   const [numberIncrementData, setNumberIncrementData] = useState();
+
   const getNumberIncrementData = async () => {
     const url = `${process.env.NEXT_PUBLIC_API_URL}/number-increment`;
 
@@ -44,6 +49,7 @@ const HomePage = () => {
 
       socket.on("incremented", () => {
         console.log("from scoket ");
+        getNumberIncrementData();
 
         // revalidateProducts();
       });
@@ -56,6 +62,42 @@ const HomePage = () => {
     };
   }, []);
 
+  const handleJoin = async () => {
+    try {
+      if (!email) {
+        return toast.error(`Please enter valid Email`);
+      }
+      setIsLoadingForSendMail(true);
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/user`;
+
+      console.log({ url });
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: email,
+        }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log({ res: res.ok });
+
+      if (!res.ok) {
+        throw new Error();
+      }
+      setIsLoadingForSendMail(false);
+
+      toast.success("Mail Sended");
+    } catch (error) {
+      console.log({ error });
+      setIsLoadingForSendMail(false);
+
+      toast.error(`Please enter valid Email`);
+    }
+  };
   return (
     <>
       <main className="h-[72vh] mt-[100px] ">
@@ -89,12 +131,20 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                 type="text"
                 placeholder="Enter your email address"
                 required
+                onChange={(e) => setEmail(e.target.value)}
               />
               <button
-                className="md:h-[40px] md:px-[16px] md:py-[0px] md:text-[14px] md:top-[-10px] sm:h-[30px] sm:top-[-6px] text-[10px] top-[-4px] py-[6px] px-[5px]"
+                className="md:h-[40px] md:px-[16px] md:py-[0px] md:text-[14px] md:top-[-10px] sm:h-[30px] sm:top-[-6px] text-[10px] top-[-4px] py-[6px] px-[5px] w-[136.05px]"
                 type="submit"
+                onClick={() => handleJoin()}
               >
-                Join waitlist
+                {isLoadingForSendMail ? (
+                  <div className="flex items-center justify-center">
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  "Join waitlist"
+                )}
               </button>
             </div>
           </div>
@@ -332,7 +382,19 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                 {/* <button
                 className={`${styles.buttonLinearGradient} p-2 rounded-[100px] text-white`}
               ></button> */}
-                <CustomBtn>Learn More</CustomBtn>
+                {/* <CustomBtn></CustomBtn> */}
+
+                <Link
+                  href={"/"}
+                  className="relative  h-[28px] font-inter font-semibold text-[15px] leading-[28px] flex items-center justify-center
+             bg-gradient-to-r from-[#236CD6] to-[#A441D5] bg-clip-text text-transparent after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-[#236CD6] after:bottom-[5px]"
+                >
+                  Learn More
+                </Link>
+
+                <Link href={"/"} className="cursor-pointer mt-1.5">
+                  <img src="/arrow.svg" alt="arrow.svg" />
+                </Link>
               </div>
             </div>
           </div>
@@ -441,7 +503,16 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
               >
                 Learn More
               </button> */}
-                <CustomBtn>Learn More</CustomBtn>
+                <Link
+                  href={"/"}
+                  className="relative  h-[28px] font-inter font-semibold text-[15px] leading-[28px] flex items-center justify-center
+             bg-gradient-to-r from-[#236CD6] to-[#A441D5] bg-clip-text text-transparent after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-[#236CD6] after:bottom-[5px]"
+                >
+                  Learn More
+                </Link>
+                <Link href={"/"} className="cursor-pointer mt-1.5">
+                  <img src="/arrow.svg" alt="arrow.svg" />
+                </Link>{" "}
               </div>
             </div>
           </div>
@@ -545,7 +616,16 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
               >
                 Learn More
               </button> */}
-                <CustomBtn>Learn More</CustomBtn>
+                <Link
+                  href={"/"}
+                  className="relative  h-[28px] font-inter font-semibold text-[15px] leading-[28px] flex items-center justify-center
+             bg-gradient-to-r from-[#236CD6] to-[#A441D5] bg-clip-text text-transparent after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-[#236CD6] after:bottom-[5px]"
+                >
+                  Learn More
+                </Link>
+                <Link href={"/"} className="cursor-pointer mt-1.5">
+                  <img src="/arrow.svg" alt="arrow.svg" />
+                </Link>{" "}
               </div>
             </div>
           </div>
@@ -651,7 +731,16 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
               >
                 Learn More
               </button> */}
-                <CustomBtn>Learn More</CustomBtn>
+                <Link
+                  href={"/"}
+                  className="relative  h-[28px] font-inter font-semibold text-[15px] leading-[28px] flex items-center justify-center
+             bg-gradient-to-r from-[#236CD6] to-[#A441D5] bg-clip-text text-transparent after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-[#236CD6] after:bottom-[5px]"
+                >
+                  Learn More
+                </Link>
+                <Link href={"/"} className="cursor-pointer mt-1.5">
+                  <img src="/arrow.svg" alt="arrow.svg" />
+                </Link>{" "}
               </div>
             </div>
           </div>
@@ -732,7 +821,18 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
           >
             All updates
           </button> */}
-          <CustomBtn>All Updates</CustomBtn>
+
+          <Link
+            href={"/"}
+            className="relative  h-[28px] font-inter font-semibold text-[15px] leading-[28px] flex items-center justify-center
+             bg-gradient-to-r from-[#236CD6] to-[#A441D5] bg-clip-text text-transparent after:content-[''] after:absolute after:w-full after:h-[1px] after:bg-[#236CD6] after:bottom-[5px]"
+          >
+            All Updates
+          </Link>
+
+          <Link href={"/"} className="cursor-pointer mt-1.5">
+            <img src="/arrow.svg" alt="arrow.svg" />
+          </Link>
         </div>
       </main>
     </>

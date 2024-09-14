@@ -28,7 +28,7 @@ const AutoIncrementBtn = ({ value }) => {
 
       onEnter: () => {
         gsap.to(game.current, {
-          score: `+=${value}`,
+          score: `${value}`,
           roundProps: "score",
           onUpdate: updateHandler,
           ease: Linear.easeNone,

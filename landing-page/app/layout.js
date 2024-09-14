@@ -12,6 +12,7 @@ export const metadata = {
 };
 import localFont from "next/font/local";
 import App from "./App";
+import { Toaster } from "react-hot-toast";
 
 const CalSansFont = localFont({
   src: [
@@ -46,6 +47,7 @@ export default function RootLayout({ children }) {
       </head>
       <body className={`${CalSansFont.className} `}>
         <App children={children} />
+        <Toaster position="top-right" reverseOrder={false} />
       </body>
     </html>
   );
