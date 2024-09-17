@@ -20,3 +20,14 @@ model NumberIncrement{
   volumeProcessedPerHour Int @default(1326522)
   UserWaitingPerMin Int @default(155294)
 }
+
+
+model Blog {
+  id String @id @default(cuid())
+  title String 
+  description String
+  thumbnail String
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

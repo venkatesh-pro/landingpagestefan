@@ -20,7 +20,7 @@ async function bootstrap() {
     .setTitle('Authex Api')
     .setDescription('List of Api of the Authex')
     .setVersion('1.0')
-    .addServer('http://localhost:3000/')
+    .addServer('http://localhost:5000/')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
