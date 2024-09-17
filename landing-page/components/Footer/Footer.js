@@ -1,6 +1,7 @@
 import React from "react";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import PingAnimation from "../HomePage/PingAnimation/PingAnimation";
+import Link from "next/link";
 const Footer = () => {
   return (
     <div className="mt-16 p-6 mb-16 dark:bg-[#030816] bg-[#fff] dark:border-[#1F293A] border-[1px] rounded-xl ">
@@ -44,9 +45,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="underline">
+                <Link href="/blog" className="underline">
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="underline">

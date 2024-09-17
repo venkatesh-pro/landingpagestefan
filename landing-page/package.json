@@ -19,6 +19,7 @@
     "@splinetool/loader": "^1.9.21",
     "@splinetool/r3f-spline": "^1.0.2",
     "@splinetool/react-spline": "^4.0.0",
+    "@tailwindcss/typography": "^0.0.0-insiders.0339c42",
     "gsap": "^3.12.5",
     "next": "14.2.6",
     "react": "^18",

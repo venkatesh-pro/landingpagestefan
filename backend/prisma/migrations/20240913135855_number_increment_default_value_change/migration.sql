@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "NumberIncrement" ALTER COLUMN "userPerDay" SET DEFAULT 1526,
-ALTER COLUMN "volumeProcessedPerHour" SET DEFAULT 1326522,
-ALTER COLUMN "UserWaitingPerMin" SET DEFAULT 155294;

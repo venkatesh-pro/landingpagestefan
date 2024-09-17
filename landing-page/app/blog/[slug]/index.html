@@ -1,0 +1,459 @@
+<div class="w-full rounded-lg border border-border px-3 py-4 backdrop-blur-[2px] md:p-6 sm:py-8 md:py-12">
+    <article class="relative mx-auto flex max-w-prose flex-col gap-8">
+        <div class="grid w-full gap-3">
+            <h1 class="mb-5 font-cal text-3xl">Dynamic Breadcrumb in Next.js with Parallel Routes</h1>
+            <div class="relative aspect-video w-full overflow-hidden rounded-lg border border-border"><img
+                    alt="Dynamic Breadcrumb in Next.js with Parallel Routes" loading="lazy" decoding="async"
+                    data-nimg="fill" class="object-cover"
+                    style="position:absolute;height:100%;width:100%;left:0;top:0;right:0;bottom:0;color:transparent"
+                    sizes="100vw"
+                    srcset="/_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=640&amp;q=75 640w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=750&amp;q=75 750w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=828&amp;q=75 828w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=1080&amp;q=75 1080w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=1200&amp;q=75 1200w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=1920&amp;q=75 1920w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=2048&amp;q=75 2048w, /_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=3840&amp;q=75 3840w"
+                    src="/_next/image?url=%2Fassets%2Fposts%2Fdynamic-breadcrumb-nextjs%2Fbreadcrumb.png&amp;w=3840&amp;q=75">
+            </div>
+            <div class="flex items-center gap-3"><span
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full"><span
+                        class="bg-muted flex h-full w-full items-center justify-center rounded-full">TD</span></span>
+                <div class="font-light text-muted-foreground text-sm"><a target="_blank"
+                        class="cursor-pointer font-medium text-foreground hover:underline"
+                        href="https://twitter.com/thibaultleouay">Thibault Le Ouay Ducasse</a>
+                    <p>Aug 19, 2024<span class="mx-1 text-muted-foreground/70">•</span>4 min read</p>
+                </div>
+            </div>
+        </div>
+        <div
+            class="prose prose-slate dark:prose-invert prose-pre:my-0 prose-img:rounded-lg prose-pre:rounded-lg prose-img:border prose-pre:border prose-img:border-border prose-pre:border-border prose-headings:font-cal prose-headings:font-normal">
+            <p>In this post, we'll dive into the process of creating dynamic breadcrumbs in Next.js using parallel
+                routes. Our goal is to build a breadcrumb component that automatically updates based on the current page
+                and its hierarchy, all while leveraging server-side rendering for optimal performance.</p>
+            <h2 id="introduction" class="group">Introduction<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#introduction"><span class="icon icon-link"></span></a></h2>
+            <p>Breadcrumbs are an essential navigation aid in web applications, helping users understand their current
+                location within a site's hierarchy. With Next.js 13's introduction of parallel routes, we have new tools
+                to create more dynamic and flexible navigation structures.</p>
+            <p>You can find the complete, working example for this tutorial on <a
+                    class="text-foreground underline underline-offset-4 hover:no-underline"
+                    href="https://github.com/openstatusHQ/nextjs-dynamic-breadcrumb/" target="_blank"
+                    rel="noopener noreferrer">GitHub</a>. The project uses Next.js 15 and demonstrates the
+                implementation of parallel routes alongside our dynamic breadcrumb.</p>
+            <h2 id="the-challenge" class="group">The Challenge<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#the-challenge"><span class="icon icon-link"></span></a></h2>
+            <p>We're building a website that showcases a catalog of dogs and cats. Our primary challenge is to create a
+                breadcrumb that adapts to the user's current location within the site structure.</p>
+            <h3 id="project-structure" class="group">Project Structure<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#project-structure"><span class="icon icon-link"></span></a></h3>
+            <p>Our repository is organized as follows:</p>
+            <div
+                class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                <button
+                    class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="h-5 w-5">
+                        <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                    </svg></button>
+                <pre><code>src/
+    app/
+        about/
+            page.tsx
+        cats/
+            page.tsx
+            [id]/
+                page.tsx
+        dogs/
+            page.tsx
+            [id]/
+                page.tsx
+</code></pre>
+            </div>
+            <h3 id="desired-breadcrumb-behavior" class="group">Desired Breadcrumb Behavior<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#desired-breadcrumb-behavior"><span class="icon icon-link"></span></a></h3>
+            <ol>
+                <li>On the homepage:</li>
+            </ol>
+            <p><code>Home</code></p>
+            <ol start="2">
+                <li>On pet pages (e.g., Dogs or Cats):</li>
+            </ol>
+            <p><code>Home &gt; Dogs</code> or <code>Home &gt; Cats</code></p>
+            <ol start="3">
+                <li>On individual pet pages:</li>
+            </ol>
+            <p>Here we only have the pet id, so we need to fetch the pet name from the server side and display it in the
+                breadcrumb.</p>
+            <p><code>Home &gt; Dogs &gt; Dog Name</code></p>
+            <p>The key is to fetch the necessary data on the server side and dynamically update the breadcrumb based on
+                the current route instead of displaying the pet id.</p>
+            <h3 id="parallel-route-" class="group">Parallel route 🚀<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#parallel-route-"><span class="icon icon-link"></span></a></h3>
+            <p><a class="text-foreground underline underline-offset-4 hover:no-underline"
+                    href="https://nextjs.org/docs/app/building-your-application/routing/parallel-routes" target="_blank"
+                    rel="noopener noreferrer">Parallel routes</a> in Next.js allow us to render multiple pages in the
+                same layout simultaneously. This feature is particularly useful for our breadcrumb implementation as it
+                allows us to maintain a consistent navigation structure across different page types.</p>
+            <h4 id="homepage" class="group">Homepage<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#homepage"><span class="icon icon-link"></span></a></h4>
+            <p>In our root layout we will use slot to render the breadcrumb component.</p>
+            <div data-rehype-pretty-code-fragment="">
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#22272e" tabindex="0" data-language="tsx" data-theme="dark"><code data-language="tsx" data-theme="dark"><span data-line=""><span style="color:#F47067">export</span><span style="color:#F69D50"> </span><span style="color:#F47067">default</span><span style="color:#F69D50"> </span><span style="color:#F47067">function</span><span style="color:#F69D50"> </span><span style="color:#DCBDFB">RootLayout</span><span style="color:#F69D50">({</span></span>
+<span data-line=""><span style="color:#F69D50">	breadcrumb,</span></span>
+<span data-line=""><span style="color:#F69D50">	children,</span></span>
+<span data-line=""><span style="color:#F69D50">}</span><span style="color:#F47067">:</span><span style="color:#F69D50"> Readonly&lt;{</span></span>
+<span data-line=""><span style="color:#F69D50">	breadcrumb</span><span style="color:#F47067">:</span><span style="color:#F69D50"> React.ReactNode;</span></span>
+<span data-line=""><span style="color:#F69D50">	children</span><span style="color:#F47067">:</span><span style="color:#F69D50"> React.ReactNode;</span></span>
+<span data-line=""><span style="color:#F69D50">}&gt;) </span><span style="color:#ADBAC7">{</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">return</span><span style="color:#ADBAC7"> (</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;</span><span style="color:#8DDB8C">html</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">lang</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"en"</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">body</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">breadcrumb</span><span style="color:#F47067">}</span></span>
+<span data-line=""><span style="color:#ADBAC7">				</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">children</span><span style="color:#F47067">}</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">body</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;/</span><span style="color:#8DDB8C">html</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">	);</span></span>
+<span data-line=""><span style="color:#ADBAC7">}</span></span></code></pre>
+                </div>
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#fff" tabindex="0" data-language="tsx" data-theme="light"><code data-language="tsx" data-theme="light"><span data-line=""><span style="color:#D73A49">export</span><span style="color:#24292E"> </span><span style="color:#D73A49">default</span><span style="color:#24292E"> </span><span style="color:#D73A49">function</span><span style="color:#24292E"> </span><span style="color:#6F42C1">RootLayout</span><span style="color:#24292E">({</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#E36209">breadcrumb</span><span style="color:#24292E">,</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#E36209">children</span><span style="color:#24292E">,</span></span>
+<span data-line=""><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#6F42C1">Readonly</span><span style="color:#24292E">&lt;{</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#E36209">breadcrumb</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#6F42C1">React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E">;</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#E36209">children</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#6F42C1">React</span><span style="color:#24292E">.</span><span style="color:#6F42C1">ReactNode</span><span style="color:#24292E">;</span></span>
+<span data-line=""><span style="color:#24292E">}&gt;) {</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">return</span><span style="color:#24292E"> (</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;</span><span style="color:#22863A">html</span><span style="color:#24292E"> </span><span style="color:#6F42C1">lang</span><span style="color:#D73A49">=</span><span style="color:#032F62">"en"</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#22863A">body</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				{breadcrumb}</span></span>
+<span data-line=""><span style="color:#24292E">				{children}</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#22863A">body</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;/</span><span style="color:#22863A">html</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">	);</span></span>
+<span data-line=""><span style="color:#24292E">}</span></span></code></pre>
+                </div>
+            </div>
+            <p>We need to create a new folder <code>@breadcrumb</code> in the <code>app</code> folder</p>
+            <p>Here we create a new file <code>page.tsx</code> that will be responsible for rendering the breadcrumb.
+            </p>
+            <div data-rehype-pretty-code-fragment="">
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#22272e" tabindex="0" data-language="tsx" data-theme="dark"><code data-language="tsx" data-theme="dark"><span data-line=""><span style="color:#F47067">import</span><span style="color:#ADBAC7"> {</span></span>
+<span data-line=""><span style="color:#ADBAC7">	Breadcrumb,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#ADBAC7">} </span><span style="color:#F47067">from</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">"@/components/ui/breadcrumb"</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#F47067">export</span><span style="color:#F69D50"> </span><span style="color:#F47067">default</span><span style="color:#F69D50"> </span><span style="color:#F47067">function</span><span style="color:#F69D50"> </span><span style="color:#DCBDFB">BreadcrumbSlot</span><span style="color:#F69D50">() </span><span style="color:#ADBAC7">{</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">return</span><span style="color:#ADBAC7"> (</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;</span><span style="color:#8DDB8C">Breadcrumb</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">					&lt;</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"/"</span><span style="color:#ADBAC7">&gt;Home&lt;/</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;/</span><span style="color:#8DDB8C">Breadcrumb</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">	);</span></span>
+<span data-line=""><span style="color:#ADBAC7">}</span></span></code></pre>
+                </div>
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#fff" tabindex="0" data-language="tsx" data-theme="light"><code data-language="tsx" data-theme="light"><span data-line=""><span style="color:#D73A49">import</span><span style="color:#24292E"> {</span></span>
+<span data-line=""><span style="color:#24292E">	Breadcrumb,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#24292E">} </span><span style="color:#D73A49">from</span><span style="color:#24292E"> </span><span style="color:#032F62">"@/components/ui/breadcrumb"</span><span style="color:#24292E">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#D73A49">export</span><span style="color:#24292E"> </span><span style="color:#D73A49">default</span><span style="color:#24292E"> </span><span style="color:#D73A49">function</span><span style="color:#24292E"> </span><span style="color:#6F42C1">BreadcrumbSlot</span><span style="color:#24292E">() {</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">return</span><span style="color:#24292E"> (</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;</span><span style="color:#005CC5">Breadcrumb</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">					&lt;</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E"> </span><span style="color:#6F42C1">href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/"</span><span style="color:#24292E">&gt;Home&lt;/</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;/</span><span style="color:#005CC5">Breadcrumb</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">	);</span></span>
+<span data-line=""><span style="color:#24292E">}</span></span></code></pre>
+                </div>
+            </div>
+            <h4 id="pet-pages" class="group">Pet pages<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#pet-pages"><span class="icon icon-link"></span></a></h4>
+            <p>We also want to create a catch all components for the dynamic routes in the <code>app</code> folder, to
+                achieve this we need to create a new file <code>page.tsx</code> in the <code>@breadcrumb/[...all]</code>
+                folder.</p>
+            <div data-rehype-pretty-code-fragment="">
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#22272e" tabindex="0" data-language="tsx" data-theme="dark"><code data-language="tsx" data-theme="dark"><span data-line=""><span style="color:#F47067">import</span><span style="color:#ADBAC7"> {</span></span>
+<span data-line=""><span style="color:#ADBAC7">	Breadcrumb,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbPage,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbSeparator,</span></span>
+<span data-line=""><span style="color:#ADBAC7">} </span><span style="color:#F47067">from</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">"@/components/ui/breadcrumb"</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""><span style="color:#F47067">import</span><span style="color:#ADBAC7"> React </span><span style="color:#F47067">from</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">"react"</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""><span style="color:#F47067">import</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">type</span><span style="color:#ADBAC7"> { ReactElement } </span><span style="color:#F47067">from</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">"react"</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#F47067">export</span><span style="color:#F69D50"> </span><span style="color:#F47067">default</span><span style="color:#F69D50"> </span><span style="color:#F47067">function</span><span style="color:#F69D50"> </span><span style="color:#DCBDFB">BreadcrumbSlot</span><span style="color:#F69D50">({</span></span>
+<span data-line=""><span style="color:#F69D50">	params,</span></span>
+<span data-line=""><span style="color:#F69D50">}</span><span style="color:#F47067">:</span><span style="color:#F69D50"> { params</span><span style="color:#F47067">:</span><span style="color:#F69D50"> { all</span><span style="color:#F47067">:</span><span style="color:#F69D50"> </span><span style="color:#6CB6FF">string</span><span style="color:#F69D50">[] } }) </span><span style="color:#ADBAC7">{</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">const</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">breadcrumbItems</span><span style="color:#F47067">:</span><span style="color:#ADBAC7"> </span><span style="color:#F69D50">ReactElement</span><span style="color:#ADBAC7">[] </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> [];</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">let</span><span style="color:#ADBAC7"> breadcrumbPage</span><span style="color:#F47067">:</span><span style="color:#ADBAC7"> </span><span style="color:#F69D50">ReactElement</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> &lt;&gt;&lt;/&gt;;</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">for</span><span style="color:#ADBAC7"> (</span><span style="color:#F47067">let</span><span style="color:#ADBAC7"> i </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">0</span><span style="color:#ADBAC7">; i </span><span style="color:#F47067">&lt;</span><span style="color:#ADBAC7"> params.all.</span><span style="color:#6CB6FF">length</span><span style="color:#ADBAC7">; i</span><span style="color:#F47067">++</span><span style="color:#ADBAC7">) {</span></span>
+<span data-line=""><span style="color:#ADBAC7">		</span><span style="color:#F47067">const</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">route</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> params.all[i];</span></span>
+<span data-line=""><span style="color:#ADBAC7">		</span><span style="color:#F47067">const</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">`/${</span><span style="color:#ADBAC7">params</span><span style="color:#96D0FF">.</span><span style="color:#ADBAC7">all</span><span style="color:#96D0FF">.</span><span style="color:#DCBDFB">at</span><span style="color:#96D0FF">(</span><span style="color:#6CB6FF">0</span><span style="color:#96D0FF">)</span><span style="color:#96D0FF">}/${</span><span style="color:#ADBAC7">route</span><span style="color:#96D0FF">}`</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""><span style="color:#ADBAC7">		</span><span style="color:#F47067">if</span><span style="color:#ADBAC7"> (i </span><span style="color:#F47067">===</span><span style="color:#ADBAC7"> params.all.</span><span style="color:#6CB6FF">length</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">-</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">1</span><span style="color:#ADBAC7">) {</span></span>
+<span data-line=""><span style="color:#ADBAC7">			</span><span style="color:#DCBDFB">breadcrumbPage</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> (</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">					&lt;</span><span style="color:#8DDB8C">BreadcrumbPage</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">className</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"capitalize"</span><span style="color:#ADBAC7">&gt;</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">route</span><span style="color:#F47067">}</span><span style="color:#ADBAC7">&lt;/</span><span style="color:#8DDB8C">BreadcrumbPage</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			);</span></span>
+<span data-line=""><span style="color:#ADBAC7">		} </span><span style="color:#F47067">else</span><span style="color:#ADBAC7"> {</span></span>
+<span data-line=""><span style="color:#ADBAC7">			breadcrumbItems.</span><span style="color:#DCBDFB">push</span><span style="color:#ADBAC7">(</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">React.Fragment</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">key</span><span style="color:#F47067">={</span><span style="color:#ADBAC7">href</span><span style="color:#F47067">}</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">					&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">						&lt;</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#F47067">={</span><span style="color:#ADBAC7">href</span><span style="color:#F47067">}</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">className</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"capitalize"</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">							</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">route</span><span style="color:#F47067">}</span></span>
+<span data-line=""><span style="color:#ADBAC7">						&lt;/</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">					&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;/</span><span style="color:#8DDB8C">React.Fragment</span><span style="color:#ADBAC7">&gt;,</span></span>
+<span data-line=""><span style="color:#ADBAC7">			);</span></span>
+<span data-line=""><span style="color:#ADBAC7">		}</span></span>
+<span data-line=""><span style="color:#ADBAC7">	}</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">return</span><span style="color:#ADBAC7"> (</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;</span><span style="color:#8DDB8C">Breadcrumb</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">					&lt;</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"/"</span><span style="color:#ADBAC7">&gt;Home&lt;/</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">breadcrumbItems</span><span style="color:#F47067">}</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbSeparator</span><span style="color:#ADBAC7"> /&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">breadcrumbPage</span><span style="color:#F47067">}</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;/</span><span style="color:#8DDB8C">Breadcrumb</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">	);</span></span>
+<span data-line=""><span style="color:#ADBAC7">}</span></span></code></pre>
+                </div>
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#fff" tabindex="0" data-language="tsx" data-theme="light"><code data-language="tsx" data-theme="light"><span data-line=""><span style="color:#D73A49">import</span><span style="color:#24292E"> {</span></span>
+<span data-line=""><span style="color:#24292E">	Breadcrumb,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbPage,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbSeparator,</span></span>
+<span data-line=""><span style="color:#24292E">} </span><span style="color:#D73A49">from</span><span style="color:#24292E"> </span><span style="color:#032F62">"@/components/ui/breadcrumb"</span><span style="color:#24292E">;</span></span>
+<span data-line=""><span style="color:#D73A49">import</span><span style="color:#24292E"> React </span><span style="color:#D73A49">from</span><span style="color:#24292E"> </span><span style="color:#032F62">"react"</span><span style="color:#24292E">;</span></span>
+<span data-line=""><span style="color:#D73A49">import</span><span style="color:#24292E"> </span><span style="color:#D73A49">type</span><span style="color:#24292E"> { ReactElement } </span><span style="color:#D73A49">from</span><span style="color:#24292E"> </span><span style="color:#032F62">"react"</span><span style="color:#24292E">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#D73A49">export</span><span style="color:#24292E"> </span><span style="color:#D73A49">default</span><span style="color:#24292E"> </span><span style="color:#D73A49">function</span><span style="color:#24292E"> </span><span style="color:#6F42C1">BreadcrumbSlot</span><span style="color:#24292E">({</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#E36209">params</span><span style="color:#24292E">,</span></span>
+<span data-line=""><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">params</span><span style="color:#D73A49">:</span><span style="color:#24292E"> { </span><span style="color:#E36209">all</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#005CC5">string</span><span style="color:#24292E">[] } }) {</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">const</span><span style="color:#24292E"> </span><span style="color:#005CC5">breadcrumbItems</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#6F42C1">ReactElement</span><span style="color:#24292E">[] </span><span style="color:#D73A49">=</span><span style="color:#24292E"> [];</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">let</span><span style="color:#24292E"> breadcrumbPage</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#6F42C1">ReactElement</span><span style="color:#24292E"> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> &lt;&gt;&lt;/&gt;;</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">for</span><span style="color:#24292E"> (</span><span style="color:#D73A49">let</span><span style="color:#24292E"> i </span><span style="color:#D73A49">=</span><span style="color:#24292E"> </span><span style="color:#005CC5">0</span><span style="color:#24292E">; i </span><span style="color:#D73A49">&lt;</span><span style="color:#24292E"> params.all.</span><span style="color:#005CC5">length</span><span style="color:#24292E">; i</span><span style="color:#D73A49">++</span><span style="color:#24292E">) {</span></span>
+<span data-line=""><span style="color:#24292E">		</span><span style="color:#D73A49">const</span><span style="color:#24292E"> </span><span style="color:#005CC5">route</span><span style="color:#24292E"> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> params.all[i];</span></span>
+<span data-line=""><span style="color:#24292E">		</span><span style="color:#D73A49">const</span><span style="color:#24292E"> </span><span style="color:#005CC5">href</span><span style="color:#24292E"> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> </span><span style="color:#032F62">`/${</span><span style="color:#24292E">params</span><span style="color:#032F62">.</span><span style="color:#24292E">all</span><span style="color:#032F62">.</span><span style="color:#6F42C1">at</span><span style="color:#032F62">(</span><span style="color:#005CC5">0</span><span style="color:#032F62">)</span><span style="color:#032F62">}/${</span><span style="color:#24292E">route</span><span style="color:#032F62">}`</span><span style="color:#24292E">;</span></span>
+<span data-line=""><span style="color:#24292E">		</span><span style="color:#D73A49">if</span><span style="color:#24292E"> (i </span><span style="color:#D73A49">===</span><span style="color:#24292E"> params.all.</span><span style="color:#005CC5">length</span><span style="color:#24292E"> </span><span style="color:#D73A49">-</span><span style="color:#24292E"> </span><span style="color:#005CC5">1</span><span style="color:#24292E">) {</span></span>
+<span data-line=""><span style="color:#24292E">			</span><span style="color:#6F42C1">breadcrumbPage</span><span style="color:#24292E"> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> (</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">					&lt;</span><span style="color:#005CC5">BreadcrumbPage</span><span style="color:#24292E"> </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"capitalize"</span><span style="color:#24292E">&gt;{route}&lt;/</span><span style="color:#005CC5">BreadcrumbPage</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			);</span></span>
+<span data-line=""><span style="color:#24292E">		} </span><span style="color:#D73A49">else</span><span style="color:#24292E"> {</span></span>
+<span data-line=""><span style="color:#24292E">			breadcrumbItems.</span><span style="color:#6F42C1">push</span><span style="color:#24292E">(</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">React.Fragment</span><span style="color:#24292E"> </span><span style="color:#6F42C1">key</span><span style="color:#D73A49">=</span><span style="color:#24292E">{href}&gt;</span></span>
+<span data-line=""><span style="color:#24292E">					&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">						&lt;</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E"> </span><span style="color:#6F42C1">href</span><span style="color:#D73A49">=</span><span style="color:#24292E">{href} </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"capitalize"</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">							{route}</span></span>
+<span data-line=""><span style="color:#24292E">						&lt;/</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">					&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;/</span><span style="color:#005CC5">React.Fragment</span><span style="color:#24292E">&gt;,</span></span>
+<span data-line=""><span style="color:#24292E">			);</span></span>
+<span data-line=""><span style="color:#24292E">		}</span></span>
+<span data-line=""><span style="color:#24292E">	}</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">return</span><span style="color:#24292E"> (</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;</span><span style="color:#005CC5">Breadcrumb</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">					&lt;</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E"> </span><span style="color:#6F42C1">href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/"</span><span style="color:#24292E">&gt;Home&lt;/</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				{breadcrumbItems}</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbSeparator</span><span style="color:#24292E"> /&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				{breadcrumbPage}</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;/</span><span style="color:#005CC5">Breadcrumb</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">	);</span></span>
+<span data-line=""><span style="color:#24292E">}</span></span></code></pre>
+                </div>
+            </div>
+            <p>This code was taken from the <a class="text-foreground underline underline-offset-4 hover:no-underline"
+                    href="https://jeremykreutzbender.com/blog/app-router-dynamic-breadcrumbs" target="_blank"
+                    rel="noopener noreferrer">Jeremy's post</a> about dynamic breadcrumbs in Next.js.</p>
+            <h4 id="dogs-and-cats-pages" class="group">Dogs and Cats pages<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#dogs-and-cats-pages"><span class="icon icon-link"></span></a></h4>
+            <p>We need to create a new file <code>page.tsx</code> in the <code>@breadcrumb/dogs/[id]</code> folder, we
+                must follow the exact same structure as our specific pet pages.
+                In this component we will fetch the pet name from the server side and display it in the breadcrumb.</p>
+            <div data-rehype-pretty-code-fragment="">
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#22272e" tabindex="0" data-language="tsx" data-theme="dark"><code data-language="tsx" data-theme="dark"><span data-line=""> </span>
+<span data-line=""><span style="color:#F47067">import</span><span style="color:#ADBAC7"> {</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbPage,</span></span>
+<span data-line=""><span style="color:#ADBAC7">	BreadcrumbSeparator,</span></span>
+<span data-line=""><span style="color:#ADBAC7">} </span><span style="color:#F47067">from</span><span style="color:#ADBAC7"> </span><span style="color:#96D0FF">"@/components/ui/breadcrumb"</span><span style="color:#ADBAC7">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#F47067">export</span><span style="color:#F69D50"> </span><span style="color:#F47067">default</span><span style="color:#F69D50"> </span><span style="color:#F47067">async</span><span style="color:#F69D50"> </span><span style="color:#F47067">function</span><span style="color:#F69D50"> </span><span style="color:#DCBDFB">BreadcrumbSlot</span><span style="color:#F69D50">({params}</span><span style="color:#F47067">:</span><span style="color:#F69D50"> {params</span><span style="color:#F47067">:</span><span style="color:#F69D50"> {id</span><span style="color:#F47067">:</span><span style="color:#F69D50"> </span><span style="color:#6CB6FF">string</span><span style="color:#F69D50">}}) </span><span style="color:#ADBAC7">{</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#768390">// Fetch our cat information from the database</span></span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">const</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">cat</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">=</span><span style="color:#ADBAC7"> </span><span style="color:#F47067">await</span><span style="color:#ADBAC7"> </span><span style="color:#DCBDFB">fetchCat</span><span style="color:#ADBAC7">({id: params.id});</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#ADBAC7">	</span><span style="color:#F47067">return</span><span style="color:#ADBAC7"> (</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"/"</span><span style="color:#ADBAC7">&gt;Home&lt;/</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbSeparator</span><span style="color:#ADBAC7"> /&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">href</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"/cats"</span><span style="color:#ADBAC7">&gt;Cats&lt;/</span><span style="color:#8DDB8C">BreadcrumbLink</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbSeparator</span><span style="color:#ADBAC7"> /&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">				&lt;</span><span style="color:#8DDB8C">BreadcrumbPage</span><span style="color:#ADBAC7"> </span><span style="color:#6CB6FF">className</span><span style="color:#F47067">=</span><span style="color:#96D0FF">"capitalize"</span><span style="color:#ADBAC7">&gt;</span><span style="color:#F47067">{</span><span style="color:#ADBAC7">cat.name</span><span style="color:#F47067">}</span><span style="color:#ADBAC7">&lt;/</span><span style="color:#8DDB8C">BreadcrumbPage</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">			&lt;/</span><span style="color:#8DDB8C">BreadcrumbItem</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">		&lt;/</span><span style="color:#8DDB8C">BreadcrumbList</span><span style="color:#ADBAC7">&gt;</span></span>
+<span data-line=""><span style="color:#ADBAC7">	);</span></span>
+<span data-line=""><span style="color:#ADBAC7">}</span></span></code></pre>
+                </div>
+                <div
+                    class="relative hidden overflow-hidden dark:[&amp;:has([data-theme='dark'])]:block [&amp;:has([data-theme='light'])]:block dark:[&amp;:has([data-theme='light'])]:hidden">
+                    <button
+                        class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 absolute top-2 right-2"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="h-5 w-5">
+                            <rect width="8" height="4" x="8" y="2" rx="1" ry="1"></rect>
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                        </svg></button>
+                    <pre style="background-color:#fff" tabindex="0" data-language="tsx" data-theme="light"><code data-language="tsx" data-theme="light"><span data-line=""> </span>
+<span data-line=""><span style="color:#D73A49">import</span><span style="color:#24292E"> {</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbItem,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbLink,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbList,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbPage,</span></span>
+<span data-line=""><span style="color:#24292E">	BreadcrumbSeparator,</span></span>
+<span data-line=""><span style="color:#24292E">} </span><span style="color:#D73A49">from</span><span style="color:#24292E"> </span><span style="color:#032F62">"@/components/ui/breadcrumb"</span><span style="color:#24292E">;</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#D73A49">export</span><span style="color:#24292E"> </span><span style="color:#D73A49">default</span><span style="color:#24292E"> </span><span style="color:#D73A49">async</span><span style="color:#24292E"> </span><span style="color:#D73A49">function</span><span style="color:#24292E"> </span><span style="color:#6F42C1">BreadcrumbSlot</span><span style="color:#24292E">({</span><span style="color:#E36209">params</span><span style="color:#24292E">}</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span><span style="color:#E36209">params</span><span style="color:#D73A49">:</span><span style="color:#24292E"> {</span><span style="color:#E36209">id</span><span style="color:#D73A49">:</span><span style="color:#24292E"> </span><span style="color:#005CC5">string</span><span style="color:#24292E">}}) {</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#6A737D">// Fetch our cat information from the database</span></span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">const</span><span style="color:#24292E"> </span><span style="color:#005CC5">cat</span><span style="color:#24292E"> </span><span style="color:#D73A49">=</span><span style="color:#24292E"> </span><span style="color:#D73A49">await</span><span style="color:#24292E"> </span><span style="color:#6F42C1">fetchCat</span><span style="color:#24292E">({id: params.id});</span></span>
+<span data-line=""> </span>
+<span data-line=""><span style="color:#24292E">	</span><span style="color:#D73A49">return</span><span style="color:#24292E"> (</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E"> </span><span style="color:#6F42C1">href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/"</span><span style="color:#24292E">&gt;Home&lt;/</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbSeparator</span><span style="color:#24292E"> /&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E"> </span><span style="color:#6F42C1">href</span><span style="color:#D73A49">=</span><span style="color:#032F62">"/cats"</span><span style="color:#24292E">&gt;Cats&lt;/</span><span style="color:#005CC5">BreadcrumbLink</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbSeparator</span><span style="color:#24292E"> /&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">				&lt;</span><span style="color:#005CC5">BreadcrumbPage</span><span style="color:#24292E"> </span><span style="color:#6F42C1">className</span><span style="color:#D73A49">=</span><span style="color:#032F62">"capitalize"</span><span style="color:#24292E">&gt;{cat.name}&lt;/</span><span style="color:#005CC5">BreadcrumbPage</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">			&lt;/</span><span style="color:#005CC5">BreadcrumbItem</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">		&lt;/</span><span style="color:#005CC5">BreadcrumbList</span><span style="color:#24292E">&gt;</span></span>
+<span data-line=""><span style="color:#24292E">	);</span></span>
+<span data-line=""><span style="color:#24292E">}</span></span></code></pre>
+                </div>
+            </div>
+            <h2 id="conclusion" class="group">Conclusion<a
+                    class="no-underline group-hover:after:content-['#'] after:text-muted-foreground/30 after:hover:text-muted-foreground ml-1 after:p-1"
+                    aria-hidden="true" href="#conclusion"><span class="icon icon-link"></span></a></h2>
+            <p>By leveraging Next.js parallel routes and server-side rendering, we've created a dynamic breadcrumb
+                component that updates based on the current route and fetches data efficiently on the server side. This
+                approach provides a smooth user experience while maintaining good performance.</p>
+            <p>Remember to check out the full working example on <a
+                    class="text-foreground underline underline-offset-4 hover:no-underline"
+                    href="https://github.com/openstatusHQ/nextjs-dynamic-breadcrumb/" target="_blank"
+                    rel="noopener noreferrer">GitHub</a> to see how all the pieces fit together in a Next.js 15 project.
+            </p>
+            <p>Happy coding!</p>
+        </div>
+    </article>
+</div>

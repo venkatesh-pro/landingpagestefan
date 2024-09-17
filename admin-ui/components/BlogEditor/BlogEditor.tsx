@@ -120,39 +120,12 @@ const BlogEditor = () => {
           className="w-full"
         />
       </div> */}
+
+      <div className="prose " dangerouslySetInnerHTML={{ __html: content }}>
+        {/* ? */}
+      </div>
     </div>
   );
 };
 
 export default BlogEditor;
-
-/*
-const onSubmit = async (data: FieldValues) => {
-    try {
-      console.log({ data });
-
-      // API request simulation
-      const response = await fetch("http://localhost:5000/user", {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        // Map errors returned from API
-        errorData.message.forEach((message: string) => {
-          const field = message.split(" ")[0];
-
-          if (field) {
-            setError(field, { type: "manual", message: message });
-          }
-        });
-      } else {
-        // Handle successful response
-      }
-    } catch (error) {
-      console.error("Error submitting form", error);
-    }
-  };
-*/

@@ -22,8 +22,8 @@ export class BlogController {
   }
 
   // for public
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.blogService.findOne(id);
+  @Get(':slug')
+  findOne(@Param('slug') slug: string) {
+    return this.blogService.findOne(slug);
   }
 }
