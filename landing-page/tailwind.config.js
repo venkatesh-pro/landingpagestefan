@@ -12,6 +12,12 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        "code-bg-light": "#f8f8f8", // Light background for code blocks
+        "code-bg-dark": "#282c34", // Dark background for code blocks
+        "code-text": "#000", // Text color for light mode
+        "code-text-dark": "#fff", // Text color for dark mode
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

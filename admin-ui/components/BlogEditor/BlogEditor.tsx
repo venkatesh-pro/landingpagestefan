@@ -2,11 +2,25 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { createBlog } from "@/actions/blog/blog";
+
+import "highlight.js/styles/atom-one-dark.css";
+import hljs from "highlight.js/lib/common";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
+// Dynamically import ReactQuill with syntax highlighting
+const ReactQuill = dynamic(
+  async () => {
+    // Configure highlight.js on the window object
+    // @ts-ignore
+    window.hljs = hljs;
+    const { default: RQ } = await import("react-quill");
+    return RQ;
+  },
+  { ssr: false }
+);
 
 const BlogEditor = () => {
   /*
@@ -53,6 +67,7 @@ const BlogEditor = () => {
   };
 
   const modules = {
+    syntax: true,
     toolbar: {
       container: [
         [{ header: [false, 1, 2, 3, 4, 5, 6] }],
