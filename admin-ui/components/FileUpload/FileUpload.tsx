@@ -5,6 +5,9 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { uploadBlogThumbnail } from "@/actions/blog/blog";
 import toast from "react-hot-toast";
 
+interface InputFileUploadProps {
+  setThumbnailUrl: (url: string) => void;
+}
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -17,32 +20,40 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-export default function InputFileUpload({ setThumbnailUrl }) {
+const InputFileUpload: React.FC<InputFileUploadProps> = ({
+  setThumbnailUrl,
+}) => {
   const [isLoading, setIsLoading] = React.useState(false);
-  const handleFileUpload = async (event) => {
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     try {
       setIsLoading(true);
       console.log(event.target.files);
       const thumbnail = new FormData();
 
       // Add file in the FormData
-      thumbnail.append("thumbnail", event.target.files[0]);
+      if (event.target.files) {
+        thumbnail.append("thumbnail", event.target.files[0]);
 
-      const res = await uploadBlogThumbnail(thumbnail);
+        const res = await uploadBlogThumbnail(thumbnail);
 
-      console.log(res);
+        console.log(res);
 
-      if (res.error) {
-        throw new Error(res.message || "Something went wrong");
+        if (res.error) {
+          throw new Error(res.message || "Something went wrong");
+        }
+        setThumbnailUrl(res.thumbnail);
+        setIsLoading(false);
+        toast.success("Uploaded");
       }
-      setThumbnailUrl(res.thumbnail);
-      setIsLoading(false);
-
-      toast.success("Uploaded");
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
 
-      toast.error(error.message);
       setIsLoading(false);
     }
   };
@@ -69,4 +80,5 @@ export default function InputFileUpload({ setThumbnailUrl }) {
       )}
     </Button>
   );
-}
+};
+export default InputFileUpload;

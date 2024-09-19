@@ -15,7 +15,8 @@ import InputFileUpload from "../FileUpload/FileUpload";
 const ReactQuill = dynamic(
   async () => {
     // Configure highlight.js on the window object
-    // @ts-ignore
+    // @ts-expect-error: hljs is not defined on the window object by default, but we are assigning it here for syntax highlighting.
+
     window.hljs = hljs;
     const { default: RQ } = await import("react-quill");
     return RQ;
@@ -32,7 +33,7 @@ const BlogEditor = () => {
   content string
   */
   const [content, setContent] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
 
   const {
     register,
@@ -100,7 +101,7 @@ const BlogEditor = () => {
             className="w-full"
             {...register("title", { required: "Title is required" })}
             error={!!errors.title}
-            helperText={errors.title?.message}
+            helperText={String(errors.title?.message)}
           />
         </div>
         <div className="w-[70vw] mt-6">
@@ -112,7 +113,7 @@ const BlogEditor = () => {
               required: "Description is required",
             })}
             error={!!errors.description}
-            helperText={errors.description?.message}
+            helperText={String(errors.description?.message)}
             className="w-full"
           />
         </div>
