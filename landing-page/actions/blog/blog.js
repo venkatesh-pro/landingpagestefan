@@ -2,7 +2,7 @@
 
 export const getBlogs = async () => {
   try {
-    const res = await fetch("http://localhost:5000/blog", {
+    const res = await fetch(`${process.env.API_URL}/blog`, {
       method: "GET",
     });
 
@@ -27,7 +27,7 @@ export const getBlogs = async () => {
 };
 export const getBlog = async (slug) => {
   try {
-    const res = await fetch(`http://localhost:5000/blog/${slug}`, {
+    const res = await fetch(`${process.env.API_URL}/blog/${slug}`, {
       method: "GET",
     });
 

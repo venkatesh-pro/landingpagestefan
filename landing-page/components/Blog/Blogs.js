@@ -21,7 +21,7 @@ const Blogs = ({ blogsData }) => {
             </div>
           </div>
         </div>
-        {blogsData.map((blog) => {
+        {blogsData?.map((blog) => {
           return (
             <article class="grid grid-cols-1 gap-4 md:grid-cols-5 md:gap-6">
               <div class="relative row-span-2">
@@ -40,7 +40,7 @@ const Blogs = ({ blogsData }) => {
                     data-nimg="fill"
                     className="object-cover p-3"
                     sizes="100vw"
-                    src={`http://localhost:5000/${blog.thumbnail}`}
+                    src={`${process.env.API_URL}/${blog.thumbnail}`}
                   />
                 </Link>
               </div>
