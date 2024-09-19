@@ -1,4 +1,5 @@
 "use client";
+import { convertIsoDate } from "@/utils/common/formatDate";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -26,7 +27,7 @@ const Blogs = ({ blogsData }) => {
               <div class="relative row-span-2">
                 <div class="sticky top-2">
                   <time class="order-2 font-mono text-muted-foreground text-sm md:order-1 md:col-span-1">
-                    Aug 19, 2024
+                    {convertIsoDate(blog.createdAt)}{" "}
                   </time>
                 </div>
               </div>
@@ -39,7 +40,7 @@ const Blogs = ({ blogsData }) => {
                     data-nimg="fill"
                     className="object-cover p-3"
                     sizes="100vw"
-                    src="https://www.team-bhp.com/sites/default/files/styles/check_extra_large_for_review/public/virtus%201_0.jpg"
+                    src={`http://localhost:5000/${blog.thumbnail}`}
                   />
                 </Link>
               </div>

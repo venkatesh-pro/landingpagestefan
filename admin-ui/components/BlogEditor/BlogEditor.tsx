@@ -9,6 +9,7 @@ import "highlight.js/styles/atom-one-dark.css";
 import hljs from "highlight.js/lib/common";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import InputFileUpload from "../FileUpload/FileUpload";
 
 // Dynamically import ReactQuill with syntax highlighting
 const ReactQuill = dynamic(
@@ -31,6 +32,7 @@ const BlogEditor = () => {
   content string
   */
   const [content, setContent] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   const {
     register,
@@ -42,7 +44,7 @@ const BlogEditor = () => {
 
   const handleSubmitData = async (data: FieldValues) => {
     try {
-      const response = await createBlog(data, content);
+      const response = await createBlog(data, content, thumbnailUrl);
       console.log(response);
 
       if (response.error) {
@@ -114,6 +116,18 @@ const BlogEditor = () => {
             className="w-full"
           />
         </div>
+        <div className="w-[70vw] flex mt-6">
+          <InputFileUpload setThumbnailUrl={setThumbnailUrl} />
+          {thumbnailUrl && (
+            <div className="w-[60px] h-[60px] object-cover">
+              <img
+                src={`http://localhost:5000/${thumbnailUrl}`}
+                alt=""
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
+        </div>
         <div className="w-[70vw] mt-6">
           <ReactQuill
             theme="snow"
@@ -127,15 +141,6 @@ const BlogEditor = () => {
           <Button type="submit">Create Blog</Button>
         </div>
       </Box>
-      {/* <div className="w-[70vw]">
-        <TextField
-          id="outlined-basic"
-          label="Please Enter the blog description"
-          variant="outlined"
-          className="w-full"
-        />
-      </div> */}
-
       <div className="prose " dangerouslySetInnerHTML={{ __html: content }}>
         {/* ? */}
       </div>
