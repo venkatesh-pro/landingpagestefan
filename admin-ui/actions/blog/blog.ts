@@ -8,7 +8,7 @@ export const createBlog = async (
   thumbnail: string
 ) => {
   try {
-    const res = await fetch(process.env.API_URL!, {
+    const res = await fetch(`${process.env.API_URL}/blog`, {
       method: "POST",
       body: JSON.stringify({
         ...data,
