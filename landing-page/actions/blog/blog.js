@@ -4,6 +4,7 @@ export const getBlogs = async () => {
   try {
     const res = await fetch(`${process.env.API_URL}/blog`, {
       method: "GET",
+      cache: "no-cache"
     });
 
     if (!res.ok) {
@@ -29,6 +30,7 @@ export const getBlog = async (slug) => {
   try {
     const res = await fetch(`${process.env.API_URL}/blog/${slug}`, {
       method: "GET",
+      cache: "no-cache",
     });
 
     if (!res.ok) {
