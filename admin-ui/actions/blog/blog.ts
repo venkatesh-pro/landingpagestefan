@@ -8,7 +8,7 @@ export const createBlog = async (
   thumbnail: string
 ) => {
   try {
-    const res = await fetch("http://localhost:5000/blog", {
+    const res = await fetch(process.env.API_URL, {
       method: "POST",
       body: JSON.stringify({
         ...data,
@@ -50,7 +50,7 @@ export const createBlog = async (
 
 export const uploadBlogThumbnail = async (file) => {
   try {
-    const res = await fetch("http://localhost:5000/blog/uploadThumbnail", {
+    const res = await fetch(`${process.env.API_URL}/blog/uploadThumbnail`, {
       method: "POST",
       body: file,
     });
