@@ -101,7 +101,10 @@ const BlogEditor = () => {
             className="w-full"
             {...register("title", { required: "Title is required" })}
             error={!!errors.title}
-            helperText={String(errors.title?.message)}
+            // helperText={errors.title?.message}
+            helperText={
+              errors.title?.message ? String(errors.title.message) : undefined
+            }
           />
         </div>
         <div className="w-[70vw] mt-6">
@@ -113,7 +116,9 @@ const BlogEditor = () => {
               required: "Description is required",
             })}
             error={!!errors.description}
-            helperText={String(errors.description?.message)}
+            helperText={
+              errors.title?.message ? String(errors.title.message) : undefined
+            }
             className="w-full"
           />
         </div>
