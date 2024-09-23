@@ -7,6 +7,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { BlogModule } from './blog/blog.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -19,6 +20,8 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

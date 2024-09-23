@@ -40,7 +40,7 @@ const Blogs = ({ blogsData }) => {
                     data-nimg="fill"
                     className="object-cover p-3"
                     sizes="100vw"
-                    src={`${process.env.NEXT_PUBLIC_API_URL}/${blog.thumbnail}`}
+                    src={blog.thumbnail}
                   />
                 </Link>
               </div>

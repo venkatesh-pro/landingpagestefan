@@ -93,7 +93,7 @@ const Blog = ({ blogData }) => {
               className="object-cover"
               sizes="100vw"
               // src="https://www.team-bhp.com/sites/default/files/styles/check_extra_large_for_review/public/virtus%201_0.jpg"
-              src={`${process.env.NEXT_PUBLIC_API_URL}/${blogData.thumbnail}`}
+              src={blogData.thumbnail}
             />
           </div>
         </div>

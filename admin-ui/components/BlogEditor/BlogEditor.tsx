@@ -127,7 +127,7 @@ const BlogEditor = () => {
           {thumbnailUrl && (
             <div className="w-[60px] h-[60px] object-cover">
               <img
-                src={`${process.env.NEXT_PUBLIC_API_URL}/${thumbnailUrl}`}
+                src={thumbnailUrl}
                 alt=""
                 className="w-full h-full object-cover"
               />
