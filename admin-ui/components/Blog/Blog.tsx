@@ -7,7 +7,8 @@ import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import ContentPasteGoIcon from "@mui/icons-material/ContentPasteGo";
 
 const Blog = ({ blogData }) => {
-  const [content, setContent] = useState([]);
+  const [content, setContent] = useState<React.ReactNode[]>([]);
+
   useEffect(() => {
     hljs.highlightAll();
   }, []);
@@ -18,13 +19,14 @@ const Blog = ({ blogData }) => {
       tempDiv.innerHTML = blogData.content;
 
       // Extracting <pre> elements and converting them to React components
-      const preElements = tempDiv.querySelectorAll("pre");
       const elements = Array.from(tempDiv.childNodes).map((node, index) => {
         console.log("node.innerHTML", node);
 
-        if (node.tagName === "PRE") {
-          const codeHtml = node.innerHTML;
-          const codeText = node.innerText;
+        if (
+          node.nodeType === Node.ELEMENT_NODE &&
+          (node as Element).tagName === "PRE"
+        ) {
+          const codeHtml = (node as Element).innerHTML;
           return (
             <div key={index} className="relative mb-4">
               <pre className="">
@@ -35,7 +37,12 @@ const Blog = ({ blogData }) => {
           );
         }
         // Handle other nodes (like paragraphs, headings) if necessary
-        return <div dangerouslySetInnerHTML={{ __html: node.outerHTML }}></div>;
+        return (
+          <div
+            key={index}
+            dangerouslySetInnerHTML={{ __html: (node as Element).outerHTML }}
+          ></div>
+        );
       });
 
       setContent(elements);

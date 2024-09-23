@@ -50,7 +50,7 @@ export const createBlog = async (
 };
 
 export const updateBlog = async (
-  slug: string,
+  slug: string | undefined,
   data: FieldValues,
   content: string,
   thumbnail: string

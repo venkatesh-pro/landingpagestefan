@@ -1,8 +1,11 @@
 import { getBlog } from "@/actions/blog/blog";
 import BlogEditor from "@/components/BlogEditor/BlogEditor";
-import React, { useState } from "react";
+import React from "react";
 
-const page = async ({ params }) => {
+interface PageParams {
+  slug: string;
+}
+const page = async ({ params }: { params: PageParams }) => {
   const blogDataForEdit = await getBlog(params.slug);
   // const [isEdit, setIsEdit] = useState(true);
 

@@ -26,9 +26,14 @@ const ReactQuill = dynamic(
 );
 
 interface BlogEditorProps {
-  blogDataForEdit?: object;
+  blogDataForEdit?;
   isEdit?: boolean;
   slug?: string;
+}
+interface BlogData {
+  title: string;
+  description: string;
+  // Add other properties as needed
 }
 const BlogEditor = ({ blogDataForEdit, isEdit, slug }: BlogEditorProps) => {
   /*
@@ -42,7 +47,9 @@ const BlogEditor = ({ blogDataForEdit, isEdit, slug }: BlogEditorProps) => {
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
 
   // for edit blog
-  const [blogDataEdit, setBlogDataEdit] = useState();
+  const [blogDataEdit, setBlogDataEdit] = useState<BlogData | undefined>(
+    undefined
+  );
   const router = useRouter();
 
   const {
@@ -138,7 +145,7 @@ const BlogEditor = ({ blogDataForEdit, isEdit, slug }: BlogEditorProps) => {
             id="outlined-basic"
             label="Please Enter the blog title"
             variant="outlined"
-            defaultValue={blogDataEdit?.title}
+            defaultValue={blogDataEdit?.title || ""}
             className="w-full"
             {...register("title", { required: "Title is required" })}
             error={!!errors.title}

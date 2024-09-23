@@ -1,6 +1,5 @@
 "use client";
 import { convertIsoDate } from "@/utils/common/formatDate";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import EditIcon from "@mui/icons-material/Edit";

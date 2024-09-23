@@ -1,18 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { ReactNode } from "react";
 
 import "./globals.css";
-import { useIsDarkStore } from "@/store";
 import Header from "@/components/Navbar/Header";
 
-const App = ({ children }) => {
-  const { isDark, updateIsDark } = useIsDarkStore();
+interface AppProps {
+  children: ReactNode;
+}
 
-  useEffect(() => {
-    window?.localStorage?.setItem("isDark", isDark);
-  }, [isDark]);
+const App = ({ children }: AppProps) => {
   return (
-    <div className={isDark ? "dark" : ""}>
+    <div>
       <div className="mt-8"></div>
       <div className=" m-auto max-w-[60rem] px-6">
         <Header />
