@@ -1,6 +1,6 @@
 "use client";
 import { Box, Button, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { createBlog } from "@/actions/blog/blog";
@@ -24,7 +24,11 @@ const ReactQuill = dynamic(
   { ssr: false }
 );
 
-const BlogEditor = () => {
+interface BlogEditorProps {
+  blogDataForEdit?: object;
+  isEdit?: boolean;
+}
+const BlogEditor = ({ blogDataForEdit, isEdit }: BlogEditorProps) => {
   /*
   
   title string
@@ -34,6 +38,9 @@ const BlogEditor = () => {
   */
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState<string>("");
+
+  // for edit blog
+  const [blogDataEdit, setBlogDataEdit] = useState();
 
   const {
     register,
@@ -45,24 +52,27 @@ const BlogEditor = () => {
 
   const handleSubmitData = async (data: FieldValues) => {
     try {
-      const response = await createBlog(data, content, thumbnailUrl);
-      console.log(response);
+      if (!isEdit) {
+        const response = await createBlog(data, content, thumbnailUrl);
+        console.log(response);
 
-      if (response.error) {
-        if (Array.isArray(response.message)) {
-          response.message?.forEach((message: string) => {
-            const field = message.split(" ")[0];
-            if (field) {
-              setError(field, { type: "manual", message: message });
-            }
-          });
+        if (response.error) {
+          if (Array.isArray(response.message)) {
+            response.message?.forEach((message: string) => {
+              const field = message.split(" ")[0];
+              if (field) {
+                setError(field, { type: "manual", message: message });
+              }
+            });
+          } else {
+            toast.error(response.message);
+          }
         } else {
-          toast.error(response.message);
+          toast.success("Created");
+          setContent("");
+          reset();
         }
       } else {
-        toast.success("Created");
-        setContent("");
-        reset();
       }
     } catch (error) {
       console.log(error);
@@ -86,6 +96,15 @@ const BlogEditor = () => {
     },
   };
 
+  useEffect(() => {
+    if (blogDataForEdit && isEdit) {
+      console.log(blogDataForEdit);
+
+      setBlogDataEdit(blogDataForEdit);
+      setContent(blogDataForEdit.content);
+      setThumbnailUrl(blogDataForEdit.thumbnail);
+    }
+  }, [blogDataForEdit]);
   return (
     <div className="flex w-full flex-col gap-3 items-center mt-10 min-h-[100vh]">
       <Box
@@ -98,6 +117,7 @@ const BlogEditor = () => {
             id="outlined-basic"
             label="Please Enter the blog title"
             variant="outlined"
+            defaultValue={blogDataEdit?.title}
             className="w-full"
             {...register("title", { required: "Title is required" })}
             error={!!errors.title}
@@ -115,6 +135,7 @@ const BlogEditor = () => {
             {...register("description", {
               required: "Description is required",
             })}
+            defaultValue={blogDataEdit?.description}
             error={!!errors.description}
             helperText={
               errors.title?.message ? String(errors.title.message) : undefined
@@ -144,7 +165,11 @@ const BlogEditor = () => {
         </div>
 
         <div>
-          <Button type="submit">Create Blog</Button>
+          {!isEdit ? (
+            <Button type="submit">Create Blog</Button>
+          ) : (
+            <Button type="submit">Edit Blog</Button>
+          )}
         </div>
       </Box>
       <div className="prose " dangerouslySetInnerHTML={{ __html: content }}>
