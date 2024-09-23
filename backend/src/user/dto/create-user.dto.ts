@@ -10,9 +10,4 @@ export class CreateUserDto {
     description: 'Enter email',
   })
   email: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(2)
-  sample: string;
 }

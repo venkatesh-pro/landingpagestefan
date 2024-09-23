@@ -11,6 +11,7 @@ model User {
   id String  @id @default(cuid())
   email String 
   locationData Json
+  isValidEmail Boolean
 }
 
 // For beta users 1-5 (random) users per day, for volume processed something between 113-987 (random) every 1-47 mins, for users waiting 5-57 (random) every minute

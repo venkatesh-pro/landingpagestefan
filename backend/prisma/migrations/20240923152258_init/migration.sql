@@ -3,6 +3,7 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "locationData" JSONB NOT NULL,
+    "isValidEmail" BOOLEAN NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
