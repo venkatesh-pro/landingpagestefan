@@ -8,6 +8,7 @@ import {
   UploadedFile,
   ParseFilePipe,
   MaxFileSizeValidator,
+  Put,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -18,6 +19,7 @@ import { diskStorage, memoryStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { extname } from 'path';
 import { UploadService } from 'src/upload/upload.service';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 @Controller('blog')
 @ApiTags('Blog')
 export class BlogController {
@@ -93,5 +95,11 @@ export class BlogController {
   @Get(':slug')
   findOne(@Param('slug') slug: string) {
     return this.blogService.findOne(slug);
+  }
+
+  @ApiOperation({ summary: 'Update blog' })
+  @Put(':slug')
+  updateOne(@Param('slug') slug: string, @Body() updateBlogDto: UpdateBlogDto) {
+    return this.blogService.update(slug, updateBlogDto);
   }
 }

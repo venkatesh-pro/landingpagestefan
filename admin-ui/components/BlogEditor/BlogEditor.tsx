@@ -3,13 +3,14 @@ import { Box, Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { createBlog } from "@/actions/blog/blog";
+import { createBlog, updateBlog } from "@/actions/blog/blog";
 
 import "highlight.js/styles/atom-one-dark.css";
 import hljs from "highlight.js/lib/common";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
 import InputFileUpload from "../FileUpload/FileUpload";
+import { useRouter } from "next/navigation";
 
 // Dynamically import ReactQuill with syntax highlighting
 const ReactQuill = dynamic(
@@ -27,8 +28,9 @@ const ReactQuill = dynamic(
 interface BlogEditorProps {
   blogDataForEdit?: object;
   isEdit?: boolean;
+  slug?: string;
 }
-const BlogEditor = ({ blogDataForEdit, isEdit }: BlogEditorProps) => {
+const BlogEditor = ({ blogDataForEdit, isEdit, slug }: BlogEditorProps) => {
   /*
   
   title string
@@ -41,6 +43,7 @@ const BlogEditor = ({ blogDataForEdit, isEdit }: BlogEditorProps) => {
 
   // for edit blog
   const [blogDataEdit, setBlogDataEdit] = useState();
+  const router = useRouter();
 
   const {
     register,
@@ -73,6 +76,24 @@ const BlogEditor = ({ blogDataForEdit, isEdit }: BlogEditorProps) => {
           reset();
         }
       } else {
+        const response = await updateBlog(slug, data, content, thumbnailUrl);
+        console.log(response);
+
+        if (response.error) {
+          if (Array.isArray(response.message)) {
+            response.message?.forEach((message: string) => {
+              const field = message.split(" ")[0];
+              if (field) {
+                setError(field, { type: "manual", message: message });
+              }
+            });
+          } else {
+            toast.error(response.message);
+          }
+        } else {
+          toast.success("updated");
+          router.push("/blog");
+        }
       }
     } catch (error) {
       console.log(error);

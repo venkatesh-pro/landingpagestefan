@@ -8,7 +8,11 @@ const page = async ({ params }) => {
 
   return (
     <div>
-      <BlogEditor blogDataForEdit={blogDataForEdit} isEdit={true} />
+      <BlogEditor
+        slug={params.slug}
+        blogDataForEdit={blogDataForEdit}
+        isEdit={true}
+      />
     </div>
   );
 };

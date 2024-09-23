@@ -25,8 +25,13 @@ export class BlogService {
     });
   }
 
-  update(id: number, updateBlogDto: UpdateBlogDto) {
-    return `This action updates a #${id} blog`;
+  update(slug: string, updateBlogDto: UpdateBlogDto) {
+    return this.prismaService.blog.update({
+      where: {
+        slug: slug,
+      },
+      data: { ...updateBlogDto, slug: slugify(updateBlogDto.title) },
+    });
   }
 
   remove(id: number) {
