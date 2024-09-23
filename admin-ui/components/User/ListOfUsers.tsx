@@ -3,10 +3,43 @@ import { getUsers } from "@/actions/user/user";
 import React from "react";
 
 const ListOfUsers = ({ users }) => {
+  // Function to convert JSON to CSV
+  const convertToCSV = (data) => {
+    const header = Object.keys(data[0])
+      .filter((key) => key !== "locationData")
+      .join(","); // Get the headers
+    const rows = data.map((user) => {
+      return Object.keys(user)
+        .filter((key) => key !== "locationData") // Exclude the 'locationData' field
+        .map((key) => user[key]) // Get the value of each key
+        .join(","); // Join them with commas
+    });
+
+    return [header, ...rows].join("\n"); // Combine header and rows with new lines
+  };
+
+  // Function to trigger the CSV file download
+  const downloadCSV = (csv, filename) => {
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+
   const downloadValidEmail = async () => {
     const users = await getUsers({ isFilter: true, isValidEmail: true });
 
     console.log("usersss", users);
+    // Convert to CSV
+    const csv = convertToCSV(users);
+    console.log(csv);
+
+    // Download the CSV file
+    downloadCSV(csv, "users.csv");
   };
   return (
     <div>
