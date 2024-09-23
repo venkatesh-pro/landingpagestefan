@@ -9,6 +9,7 @@ import {
   ParseFilePipe,
   MaxFileSizeValidator,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
@@ -101,5 +102,11 @@ export class BlogController {
   @Put(':slug')
   updateOne(@Param('slug') slug: string, @Body() updateBlogDto: UpdateBlogDto) {
     return this.blogService.update(slug, updateBlogDto);
+  }
+
+  @ApiOperation({ summary: 'Delete blog' })
+  @Delete(':slug')
+  deleteOne(@Param('slug') slug: string) {
+    return this.blogService.delete(slug);
   }
 }

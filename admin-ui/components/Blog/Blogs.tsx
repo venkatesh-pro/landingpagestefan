@@ -6,10 +6,20 @@ import React from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { deleteBlog } from "@/actions/blog/blog";
 
 const Blogs = ({ blogsData }) => {
-  console.log(blogsData);
+  console.log("blogsData=>", blogsData);
 
+  const handleBlogDelete = async (slug) => {
+    try {
+      const res = await deleteBlog(slug);
+
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="w-full rounded-lg border border-border px-3 py-4 backdrop-blur-[2px] md:p-6 mt-8">
       <div className="grid gap-8">
@@ -76,7 +86,7 @@ const Blogs = ({ blogsData }) => {
                   </div>
                   <div className="ml-3">
                     <button className="inline-flex items-center justify-center text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 rounded-full">
-                      <DeleteIcon />
+                      <DeleteIcon onClick={() => handleBlogDelete(blog.slug)} />
                     </button>
                   </div>
                 </div>

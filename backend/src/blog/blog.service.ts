@@ -34,7 +34,11 @@ export class BlogService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} blog`;
+  delete(slug: string) {
+    return this.prismaService.blog.delete({
+      where: {
+        slug: slug,
+      },
+    });
   }
 }
