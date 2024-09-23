@@ -9,11 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "code-bg-light": "#f8f8f8", // Light background for code blocks
+        "code-bg-dark": "#282c34", // Dark background for code blocks
+        "code-text": "#000", // Text color for light mode
+        "code-text-dark": "#fff", // Text color for dark mode
       },
     },
   },
   plugins: [require("@tailwindcss/typography")],
+  darkMode: "class",
 };
 export default config;
