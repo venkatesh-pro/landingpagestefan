@@ -312,9 +312,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Did someone say Automation?
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    Manage everything from CRM to accounting through Envoy's
-                    powerful NLP interface. Automate key tasks and focus on
-                    growth while Envoy handles the rest.
+                    venkatesh
                   </li>
                 </div>
                 <div>
