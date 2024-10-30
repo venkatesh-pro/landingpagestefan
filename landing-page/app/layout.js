@@ -5,8 +5,8 @@ import Header from "@/components/Header/Header";
 import Script from "next/script"; // Import Next.js Script component
 
 export const metadata = {
-  title: "Envoy",
-  description: "Envoy Wating List Website",
+  title: "McKinsly",
+  description: "McKinsly Wating List Website",
   icons: {
     icon: "/logo.png",
   },

@@ -11,7 +11,7 @@ const Footer = () => {
             <div className="w-[30px] ">
               <img src="/logo.png" alt="logo" />
             </div>
-            <p className="text-xl dark:text-white font-[600] ml-1">Envoy</p>
+            <p className="text-xl dark:text-white font-[600] ml-1">McKinsly</p>
           </div>
 
           <p className="dark:text-[#919EB5] text-[#64748B] mt-2 sm:w-[70%] font-[300] text-[14px]">

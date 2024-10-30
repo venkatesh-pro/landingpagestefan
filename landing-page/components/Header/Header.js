@@ -10,7 +10,7 @@ const Header = ({ isDark, updateIsDark }) => {
           <div className="w-[22px] mr-1 ">
             <img src="/logo.png" alt="logo" />
           </div>
-          <p>Envoy</p>
+          <p>McKinsly</p>
         </div>
       </Link>
       <div className="">

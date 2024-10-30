@@ -16,7 +16,7 @@ const Blogs = ({ blogsData }) => {
             <div class="grid gap-4">
               <h1 class="font-bold text-4xl text-foreground">Blog</h1>
               <p class="text-muted-foreground">
-                All the latest articles and news from Envoy.
+                All the latest articles and news from McKinsly.
               </p>
             </div>
           </div>

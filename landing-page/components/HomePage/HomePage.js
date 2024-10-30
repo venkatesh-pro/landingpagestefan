@@ -293,7 +293,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Intelligent Management
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    Envoy simplifies and automates core business processes for
+                    McKinsly simplifies and automates core business processes for
                     companies of all sizes, from startups to global enterprises.{" "}
                   </li>
                 </div>
@@ -312,7 +312,8 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Did someone say Automation?
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    venkatesh
+                  Manage everything from CRM to accounting through McKinsly’s powerful NLP interface. 
+                  Automate key tasks and focus on growth while McKinsly handles the rest.
                   </li>
                 </div>
                 <div>
@@ -330,7 +331,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Streamlined Workflows{" "}
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    Envoy’s automation optimizes workflows across your business,
+                    McKinsly’s automation optimizes workflows across your business,
                     ensuring efficiency in customer interactions, operations,
                     and logistics.
                   </li>
@@ -370,7 +371,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Autonomous Ecosystem
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    Envoy enables your business to scale from $1 to $1 billion
+                    McKinsly enables your business to scale from $1 to $1 billion
                     with minimal human intervention, driving success in a
                     fast-changing market.
                   </li>
@@ -422,7 +423,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
             Financial Tools That Grow With You
           </h2>
           <p className="text-[#64748B] md:w-[60%] w-[85%] md:text-[16px] text-[14px] mt-4">
-            Envoy’s scalable financial infrastructure adapts to your business at
+            McKinsly’s scalable financial infrastructure adapts to your business at
             every stage of growth.
           </p>
         </div>
@@ -453,7 +454,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
                     Unlock the capital your business needs with seamless access
-                    to venture funding and financial support through Envoy.
+                    to venture funding and financial support through McKinsly.
                   </li>
                 </div>
                 <div>
@@ -533,7 +534,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
             Legal Tools That Evolve With You
           </h2>
           <p className="text-[#64748B] md:w-[60%] w-[85%] md:text-[16px] text-[14px] mt-4">
-            As your business grows, Envoy’s legal infrastructure scales to meet
+            As your business grows, McKinsly’s legal infrastructure scales to meet
             evolving regulatory demands, ensuring you stay ahead of the curve.
           </p>
         </div>
@@ -564,7 +565,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
                     Ensure your business meets all legal requirements with
-                    Envoy’s automated solutions for contracts, filings, and
+                    McKinsly’s automated solutions for contracts, filings, and
                     corporate governance.{" "}
                   </li>
                 </div>
@@ -602,7 +603,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                     Stay Compliant, Stay Confident
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
-                    Envoy automates corporate filings and legal document
+                    McKinsly automates corporate filings and legal document
                     management, keeping your business compliant with minimal
                     effort.{" "}
                   </li>
@@ -718,7 +719,7 @@ via-[hsl(222.2,84%,4.9%)] to-[hsl(222.2,84%,4.9%)] dark:from-[hsl(210,40%,30%)] 
                   </li>
                   <li className="text-[#64748B] text-justify md:mr-10">
                     Gain insights and guidance from experienced mentors within
-                    the Envoy community, giving you the support you need to grow
+                    the McKinsly community, giving you the support you need to grow
                     and succeed.{" "}
                   </li>
                 </div>
