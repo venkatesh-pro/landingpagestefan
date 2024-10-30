@@ -123,7 +123,7 @@ const Footer = () => {
         </div>
         <div>
           <p className="dark:text-[#919EB5] text-[#64748B]">
-            Copyright © Authex Inc., 2024
+            Copyright © Acclogic Inc., 2024
           </p>
         </div>
       </div>
